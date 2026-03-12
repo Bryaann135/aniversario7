@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Para Valeska ❤️</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+margin:0;
+font-family: Arial;
+background:black;
+color:white;
+text-align:center;
+overflow:hidden;
+}
+
+h1, h2, #teamo{
+font-family:'Dancing Script', cursive;
+}
+
+canvas{
+position:fixed;
+top:0;
+left:0;
+z-index:-1;
+}
+
+.container{
+margin-top:80px;
+}
+
+button{
+padding:15px 30px;
+font-size:18px;
+border:none;
+border-radius:12px;
+cursor:pointer;
+background:#ff4d6d;
+color:white;
+}
+
+#gameArea{
+position:relative;
+width:100%;
+height:60vh;
+overflow:hidden;
+}
+
+.heart{
+position:absolute;
+font-size:30px;
+cursor:pointer;
+animation:fall 4s linear;
+}
+
+@keyframes fall{
+0%{transform:translateY(-10vh);}
+100%{transform:translateY(70vh);}
+}
+
+#score{
+font-size:22px;
+margin-top:10px;
+}
+
+#razones{
+margin-top:20px;
+font-size:22px;
+}
+
+#teamo{
+font-size:70px;
+margin-top:40px;
+animation:pulse 1.5s infinite;
+color:#ff4d6d;
+}
+
+@keyframes pulse{
+0%{transform:scale(1);}
+50%{transform:scale(1.2);}
+100%{transform:scale(1);}
+}
+
+.explosion{
+position:absolute;
+font-size:40px;
+animation:explode 2s forwards;
+}
+
+@keyframes explode{
+0%{transform:scale(0);}
+50%{transform:scale(1.5);}
+100%{transform:scale(0); opacity:0;}
+}
+
+</style>
+</head>
+
+<body>
+
+<audio id="musica" loop>
+<source src="musica.mp3" type="audio/mpeg">
+</audio>
+
+<canvas id="stars"></canvas>
+
+<div class="container" id="inicio">
+
+<h1>❤️ Tengo algo especial para ti Valeska ❤️</h1>
+<p>Primero tendrás que jugar</p>
+
+<button onclick="empezar()">Empezar</button>
+
+</div>
+
+<div id="juego" style="display:none;">
+
+<h2> atrapa 10 corazones para desbloquear tu sorpresa 💖</h2>
+
+<div id="score">0 / 10</div>
+
+<div id="gameArea"></div>
+
+</div>
+
+<div class="container" id="final" style="display:none;">
+
+<h1>Feliz 7 meses Valeska ❤️</h1>
+
+<h2>7 cosas que amo de ti</h2>
+
+<div id="razones"></div>
+
+<div id="teamo">TE AMO VALESKA ❤️</div>
+
+</div>
+
+<script>
+
+function empezar(){
+
+document.getElementById("musica").play();
+
+document.getElementById("inicio").style.display="none";
+document.getElementById("juego").style.display="block";
+
+setInterval(crearCorazon,800);
+
+}
+
+let score=0;
+
+let razones=[
+"Tu sonrisa hermosa",
+"Cómo me haces reír siempre",
+"Nuestros momentos juntos",
+"Tu forma de ser conmigo",
+"Lo feliz que me haces",
+"Nuestros recuerdos",
+"Porque simplemente eres tú 🐒💗"
+];
+
+function crearCorazon(){
+
+let heart=document.createElement("div");
+heart.classList.add("heart");
+heart.innerHTML="❤️";
+
+heart.style.left=Math.random()*90+"vw";
+
+heart.onclick=function(){
+
+heart.remove();
+score++;
+
+document.getElementById("score").innerText=score+" / 10";
+
+if(score>=10){
+terminarJuego();
+}
+
+};
+
+document.getElementById("gameArea").appendChild(heart);
+
+setTimeout(()=>{heart.remove();},4000);
+
+}
+
+function terminarJuego(){
+
+document.getElementById("juego").style.display="none";
+
+explosion();
+
+setTimeout(()=>{
+
+document.getElementById("final").style.display="block";
+
+mostrarRazones();
+
+},2000);
+
+}
+
+function explosion(){
+
+for(let i=0;i<40;i++){
+
+let heart=document.createElement("div");
+heart.classList.add("explosion");
+heart.innerHTML="💖";
+
+heart.style.left=Math.random()*100+"vw";
+heart.style.top=Math.random()*100+"vh";
+
+document.body.appendChild(heart);
+
+setTimeout(()=>{heart.remove();},2000);
+
+}
+
+}
+
+function mostrarRazones(){
+
+let i=0;
+
+let intervalo=setInterval(function(){
+
+if(i<razones.length){
+
+document.getElementById("razones").innerHTML+=razones[i]+"<br>";
+i++;
+
+}else{
+
+clearInterval(intervalo);
+
+}
+
+},1200);
+
+}
+
+/* fondo estrellas */
+
+let canvas=document.getElementById("stars");
+let ctx=canvas.getContext("2d");
+
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+
+let stars=[];
+
+for(let i=0;i<200;i++){
+
+stars.push({
+x:Math.random()*canvas.width,
+y:Math.random()*canvas.height,
+r:Math.random()*2
+});
+
+}
+
+function drawStars(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+ctx.fillStyle="white";
+
+stars.forEach(s=>{
+ctx.beginPath();
+ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+ctx.fill();
+});
+
+}
+
+setInterval(drawStars,50);
+
+</script>
+
+</body>
+</html>
